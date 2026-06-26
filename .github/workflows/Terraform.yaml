@@ -1,45 +1,37 @@
-name: Terraform Pipeline
+name: Testing_pupose
 
-on:
-  workflow_dispatch:
+on: 
+  push:
+    branches: 
+      - main
 
 permissions:
   id-token: write
   contents: read
 
 jobs:
-  terraform:
-    name: Azure Login and Terraform
+  Terraform_testing:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v7.0.0
 
-      - name: Azure login
-        uses: azure/login@v2
+      - name: azure/login
+        uses: azure/login@v3
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: true
+ 
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v4
-        with:
-          terraform_version: "1.14.6"
-
-      - name: Terraform init
-        run: terraform init
-
-      - name: Terraform fmt
-        run: terraform fmt -check
-
-      - name: Terraform validate
-        run: terraform validate
-
-      - name: Terraform plan
-        run: terraform plan
-
-      - name: Terraform apply
-        run: terraform apply -auto-approve
+      - name: HashiCorp - Setup Terraform
+        uses: hashicorp/setup-terraform@v2.0.3
+ 
+      # Runs a set of commands using the runners shell
+      - name: terraform
+        run: |
+          terraform init
+          terraform validate  
+          terraform plan
+          terraform apply -auto-approve
