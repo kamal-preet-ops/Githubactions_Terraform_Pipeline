@@ -33,7 +33,6 @@ jobs:
 
   Job3:
     name: Terraform Commands
-    needs: Job2
     runs-on: ubuntu-latest
 
     steps:
